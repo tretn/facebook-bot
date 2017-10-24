@@ -1,11 +1,17 @@
-# Facebook Bot Reminder App
-![Facebook Bot App](https://cosmicjs.com/uploads/cf007360-4aec-11e7-86b9-030f138f68e4-Screen%20Shot%202017-06-06%20at%202.17.15%20PM.png)
-[View the blog article to learn how it's built](https://cosmicjs.com/blog/how-to-build-a-facebook-bot-app-using-nodejs).
+# Vyrob si vlastního chatbota
 
-Facebook Bot Reminder App allows you to create and recieve reminders anywhere utilizing a Facebook messenger bot.
+V posledních letech zažívají obrovský boom uživatelská rozhraní založená na přirozené konverzaci. Můžeš se svého telefonu zeptat na zítřejší počasí, rezervovat si na facebooku lístky do kina apod. Přijď si vytvořit vlastního chatbota a zjistit, jak se takováto rozhraní vyrábí.
+Úvod
 
-### Commands
-Out of the box it comes equiped with the following commands. You can also get a list of commands by typing in 'help'.
-- setup: Asks for your Bucket's read and write keys
-- create: Create a new reminder using natural date parsing. Think todoist but reminders.
-- config: Returns your current bucket details. This is good for debugging.
+### Co se na tomto workshopu naučíte a co si vyzkoušíte:
+
+* Zjistíte, jak fungují automatické roboty pro chat
+* Zjistíte, jak ze svého počítače udělat server pro chatbota
+* Naučíte se konfigurovat chatbota na facebooku
+* Vytvoříte si vlastního chatbota v jazyce Javascript
+* A nakonec si se svým chatbotem můžete promluvit!
+
+### Co k tomu budete potřebovat:
+
+* Účet na Facebooku
+
