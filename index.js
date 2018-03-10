@@ -26,7 +26,7 @@ const reminders = []
 
 const eventEmitter = new EventEmitter()
 
-app.set('port', (process.env.PORT || 5000))
+app.set('port', (3000))
 app.use(bodyParser.urlencoded({extended: false}))
 app.use(bodyParser.json())
 
@@ -122,7 +122,7 @@ bot.hear('vtip', (payload, chat) => {
 })
 */
 
-bot.start()
+bot.start(process.env.PORT || 5000)
 
 weather.find({search: 'Prague, Czech Republic', degreeType: 'C'}, function(err, result) {
   if(err) console.log(err);
