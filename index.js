@@ -8,8 +8,19 @@ require('dotenv').config()
 const chrono = require('chrono-node')
 var schedule = require('node-schedule')
 const EventEmitter = require('events').EventEmitter
+var weather = require('weather-js')
 
 var config = {}
+
+const odpovedJeAno = (odpoved) => {
+  var anoOdpovedi = ['ano', 'jo', 'tak jo', 'jasně']
+  return anoOdpovedi.includes(odpoved.toLowerCase)
+}
+
+const odpovedJeNe = (odpoved) => {
+  var neOdpovedi = ['ne', 'ani omylem', 'nechci']
+  return neOdpovedi.includes(odpoved.toLowerCase)
+}
 
 const reminders = []
 
@@ -40,30 +51,84 @@ const bot = new BootBot({
   appSecret: process.env.APP_SECRET
 })
 
-bot.setGreetingText("Ahoj, jak se dneska máš? Nezvedl by ti náladu vtip?")
+bot.setGreetingText("Tento chatbot Vám řekne, jaké bude počasí")
 
 bot.setGetStartedButton((payload, chat) => {
-  if(config.bucket === undefined){
-    chat.say('Ahoj! Jsem Náladobot a mým účelem je zvednout ti náladu!')
-  }
-  BotUserId = payload.sender.id
+  chat.say({text: 'Ahoj! Zeptej se mě, jaké bude počasí',
+            quickReplies: ['Počasí dnes', 'Počasí zítra']}, {typing: 2000});
 });
 
-bot.hear(['ahoj', 'čau', 'čus'], (payload, chat)=>{
-  chat.getUserProfile().then((user) => {
-    chat.say(`Ahoj ${user.first_name}, jak se dnes máš?`)
+const pocasiDnesKonverzace = (conversation) => {
+  weather.find({search: 'Prague, Czech Republic', degreeType: 'C'}, function(err, result) {
+    var currentTemperature = result[0].current.temperature
+    conversation.ask({text: 'Dneska bude '+currentTemperature+'°C. Chceš vědět i jak bude zítra?',
+      quickReplies: ['Ano', 'Ne']}, (payload, chat) => {
+        var odpoved = payload.message.text;
+        if (odpoved == 'Ano' || odpoved == 'jo') {
+          chat.conversation(pocasiZitraKonverzace)
+          chat.end()
+        } else {
+          chat.say('Tak ahoj!')
+          chat.end()
+        }
+    }, [], {typing: 2000});
+  })
+}
+
+const pocasiZitraKonverzace = (conversation) => {
+  weather.find({search: 'Prague, Czech Republic', degreeType: 'C'}, function(err, result) {
+    var tomorrow = result[0].forecast[2]
+    conversation.ask({text: 'Zítra bude '+tomorrow.low+'-'+tomorrow.high+'°C. Chceš vědět i jak bude dnes?',
+      quickReplies: ['Ano', 'Ne']}, (payload, chat) => {
+        var odpoved = payload.message.text;
+        if (odpoved == 'Ano' || odpoved == 'jo') {
+          chat.conversation(pocasiDnesKonverzace)
+          chat.end()
+        } else {
+          chat.say('Tak ahoj!')
+          chat.end()
+        }
+      }, [], {typing: 2000});
+  })
+}
+
+bot.hear(['Počasí dnes', 'dnes', 'dneska'], (payload, chat) => {
+  chat.conversation(pocasiDnesKonverzace)
+})
+
+bot.hear(['Počasí zítra', 'zítra', 'zejtra'], (payload, chat) => {
+  chat.conversation(pocasiZitraKonverzace)
+})
+
+
+
+/*
+bot.hear(['ahoj', 'čau', 'čus'], (payload, chat) => {
+  chat.say({'text': 'Tobě taky ahoj!',
+            'quickReplies': ['Řekni mi vtip', 'Co mám dělat?']});
+});
+
+bot.hear('vtip', (payload, chat) => {
+  const jakyVtipChces = (convo) => {
+    convo.ask("Chceš slyšet první nebo druhý vtip?", (payload, convo) => {
+      var kteryVtip = payload.message.text;
+      chat.say("Chceš slyšet "+kteryVtip+" vtip");
+    })
+  }
+  
+  chat.conversation((convo) => {
+    jakyVtipChces(convo)
   })
 })
-
-bot.hear(['vtip'], (payload, chat)=>{
-  chat.say('Co řekne arabský včelař, když mu uletí včely? Ach med.')
-})
-
-bot.hear('pomoc', (payload, chat) => {
-  chat.say('Žádné starosti, tady je pár příkazů, které poslouchám:')
-  chat.say("'vtip': řeknu ti vtip")
-  chat.say("'ahoj': pozdravím tě zpátky")
-  chat.say("'pomoc': řeknu ti, s jakými příkazy umím pracovat")
-})
+*/
 
 bot.start()
+
+weather.find({search: 'Prague, Czech Republic', degreeType: 'C'}, function(err, result) {
+  if(err) console.log(err);
+  
+  console.log(result[0].current.temperature);
+  var tomorrow = result[0].forecast[2]
+  console.log(tomorrow.low + " - " + tomorrow.high);
+  var image = result[0].current.imageUrl
+});
