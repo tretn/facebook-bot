@@ -29,6 +29,13 @@ bot.hear(/movie (.*)/i, (payload, chat, data) => {
             .then(res => res.json())
             .then(json => {
               console.log("Search result is "+JSON.stringify(json));
+              conversation.ask({
+                text: "Are you looking for one of these movies?",
+                quickReplies: json.Search.map((movie) => {movie.Title}),
+                options: {typing: true}
+              }, (payload, conversation) => {
+                conversation.end();
+              });
             });
         } else {
           conversation.say('I found a movie '+json.Title, {typing: true});
