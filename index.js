@@ -22,7 +22,7 @@ bot.hear(/movie (.*)/i, (payload, chat, data) => {
     fetch(MOVIE_API+'&t='+movieName)
       .then(res => res.json())
       .then(json => {
-        console.log("Search result is "+json);
+        console.log("Search result is "+json.stringify());
         conversation.say('I found a movie '+json.Title, {typing: true});
         setTimeout(() => {
           conversation.say("The movie is from "+json.Year+" and was directed by "+json.Director, {typing: true});
