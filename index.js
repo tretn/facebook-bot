@@ -24,13 +24,17 @@ bot.hear(/search (.*)/i, (payload, chat, data) => {
       .then(res => res.json())
       .then(json => {
         console.log("Search result is "+JSON.stringify(json));
+        const options = json.Search.map((movie) => {movie.Title});
+        console.log("Options for user are "+JSON.stringify(options));
+        /*
         conversation.ask({
           text: "Are you looking for one of these movies?",
-          quickReplies: json.Search.map((movie) => {movie.Title}),
+          quickReplies: ,
           options: {typing: true}
         }, (payload, conversation) => {
           conversation.end();
         });
+        */
       });
   })
 })
