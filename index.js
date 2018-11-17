@@ -19,6 +19,7 @@ bot.hear(/search (.*)/i, (payload, chat, data) => {
   chat.conversation((conversation) => {
     const movieName = data.match[1];
     console.log("Somebody asked about movie "+movieName);
+    conversation.say("I'm looking for movies with titles like "+movieName, {typing: true});
     fetch(MOVIE_API+'&s='+movieName)
       .then(res => res.json())
       .then(json => {
@@ -43,7 +44,7 @@ bot.hear(/movie (.*)/i, (payload, chat, data) => {
       .then(json => {
         console.log("Search result is "+JSON.stringify(json));
         if (json.Response === "False") {
-          conversation.say('I could not find the movie '+movieName, {typing: true});
+          conversation.say('I could not find the movie '+movieName+', you can try searching for movie like "search [movie name]"', {typing: true});
           conversation.end();
         } else {
           conversation.say('I found a movie '+json.Title, {typing: true});
