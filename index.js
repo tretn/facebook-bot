@@ -15,6 +15,25 @@ bot.hear(['hi', 'hello'], (payload, chat) => {
   chat.say('Hi! If you would like to know details about a movie, tell me "movie" and the name of the movie', {typing: true})
 });
 
+bot.hear(/search (.*)/i, (payload, chat, data) => {
+  chat.conversation((conversation) => {
+    const movieName = data.match[1];
+    console.log("Somebody asked about movie "+movieName);
+    fetch(MOVIE_API+'&s='+movieName)
+      .then(res => res.json())
+      .then(json => {
+        console.log("Search result is "+JSON.stringify(json));
+        conversation.ask({
+          text: "Are you looking for one of these movies?",
+          quickReplies: json.Search.map((movie) => {movie.Title}),
+          options: {typing: true}
+        }, (payload, conversation) => {
+          conversation.end();
+        });
+      });
+  })
+})
+
 bot.hear(/movie (.*)/i, (payload, chat, data) => {
   chat.conversation((conversation) => {
     const movieName = data.match[1];
@@ -25,18 +44,7 @@ bot.hear(/movie (.*)/i, (payload, chat, data) => {
         console.log("Search result is "+JSON.stringify(json));
         if (json.Response === "False") {
           conversation.say('I could not find the movie '+movieName, {typing: true});
-          fetch(MOVIE_API+'&s='+movieName)
-            .then(res => res.json())
-            .then(json => {
-              console.log("Search result is "+JSON.stringify(json));
-              conversation.ask({
-                text: "Are you looking for one of these movies?",
-                quickReplies: json.Search.map((movie) => {movie.Title}),
-                options: {typing: true}
-              }, (payload, conversation) => {
-                conversation.end();
-              });
-            });
+          conversation.end();
         } else {
           conversation.say('I found a movie '+json.Title, {typing: true});
           setTimeout(() => {
