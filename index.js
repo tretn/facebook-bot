@@ -23,25 +23,34 @@ bot.hear(/movie (.*)/i, (payload, chat, data) => {
       .then(res => res.json())
       .then(json => {
         console.log("Search result is "+JSON.stringify(json));
-        conversation.say('I found a movie '+json.Title, {typing: true});
-        setTimeout(() => {
-          conversation.say("The movie is from "+json.Year+" and was directed by "+json.Director, {typing: true});
-        }, 1000)
-        setTimeout(() => {
-          conversation.ask({
-            text: "Would you like to know what the movie is about?",
-            quickReplies: ["Yes", "No"],
-            options: {typing: true}
-          }, (payload, conversation) => {
-            if (payload.message.text === "Yes") {
-              conversation.say(json.Plot, {typing: true});
-              conversation.end();
-            } else {
-              conversation.say("Ok, ask me about a different movie then.", {typing: true});
-              conversation.end();
-            }
-          });
-        }, 2000)
+        if (json.Response === "False") {
+          conversation.say('I could not find the movie '+movieName, {typing: true});
+          fetch(MOVIE_API+'&s='+movieName)
+            .then(res => res.json())
+            .then(json => {
+              console.log("Search result is "+JSON.stringify(json));
+            });
+        } else {
+          conversation.say('I found a movie '+json.Title, {typing: true});
+          setTimeout(() => {
+            conversation.say("The movie is from "+json.Year+" and was directed by "+json.Director, {typing: true});
+          }, 1000)
+          setTimeout(() => {
+            conversation.ask({
+              text: "Would you like to know what the movie is about?",
+              quickReplies: ["Yes", "No"],
+              options: {typing: true}
+            }, (payload, conversation) => {
+              if (payload.message.text === "Yes") {
+                conversation.say(json.Plot, {typing: true});
+                conversation.end();
+              } else {
+                conversation.say("Ok, ask me about a different movie then.", {typing: true});
+                conversation.end();
+              }
+            });
+          }, 2000)
+        }
     });
   })
 })
