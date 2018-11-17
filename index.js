@@ -18,6 +18,7 @@ bot.hear(['hi', 'hello'], (payload, chat) => {
 bot.hear(/movie (.*)/i, (payload, chat, data) => {
   chat.conversation((conversation) => {
     const movieName = data.match[1];
+    console.log("Somebody asked about movie "+movieName);
     fetch(MOVIE_API+'&t='+movieName)
       .then(res => res.json())
       .then(json => {
