@@ -1,7 +1,6 @@
 const BootBot = require('bootbot');
 const config = require('config');
 const fetch = require('node-fetch');
-const GIPHY_URL = `http://api.giphy.com/v1/gifs/random?api_key=dc6zaTOxFJmzC&tag=`;
 const MOVIE_API = "http://www.omdbapi.com/?apikey=8df4f6a8"
 
 const bot = new BootBot({
@@ -40,11 +39,7 @@ bot.hear(/movie (.*)/i, (payload, chat, data) => {
           });
         }, 2000)
     });
-
-
   })
-
-  
 })
 
 bot.start();
