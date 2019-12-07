@@ -5,13 +5,15 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "forward": "lt --port 3000 --subdomain noahsmessengerbot",
-    "start": "node index.js"
+    "foward": "lt --port 3000 --subdomain ucworkshop2019",
+    "start": "node index.js",
+    "startDev": "nodemon index.js"
   },
   "author": "Noah Vaillancourt",
   "license": "ISC",
   "dependencies": {
     "bootbot": "^1.0.16",
-    "config": "2.0.1"
+    "config": "2.0.1",
+    "nodemon": "^1.18.10"
   }
 }
