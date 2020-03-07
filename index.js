@@ -4,7 +4,7 @@ const fetch = require('node-fetch');
 
 const MOVIE_API = "http://www.omdbapi.com/?apikey=8df4f6a8"
 
-var port = process.env.PORT || 3000;
+var port = process.env.PORT || config.get('PORT');
 
 const bot = new BootBot({
   accessToken: config.get('ACCESS_TOKEN'),
@@ -15,6 +15,7 @@ const bot = new BootBot({
 bot.hear(['hi', 'hello'], (payload, chat) => {
   chat.say('Hi! If you would like to know details about a movie, tell me "movie" and the name of the movie', {typing: true})
 });
+
 
 bot.hear(/movie (.*)/i, (payload, chat, data) => {
   chat.conversation((conversation) => {
