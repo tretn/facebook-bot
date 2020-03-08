@@ -6,7 +6,8 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node index.js",
-    "startDev": "node development.js"
+    "startDev": "nodemon index.js",
+    "startTunnel": "node tunnel.js"
   },
   "author": "Noah Vaillancourt",
   "license": "ISC",
