@@ -276,7 +276,6 @@ function weather5dayForecast(conversation, json) {
       switch (payload.message.text) {
         case "Temperature":
           let temp = ""
-          conversation.say("Current temperature in " + json.list[1].main.temp + " (" + json.city.name + " Celsius.", { typing: true });
           for (var i = 0; i < json.list.length; i++) {
             let pdate = json.list[i].dt_txt.substring(8, 10) + "." + json.list[i].dt_txt.substring(5, 7) + ". " + json.list[i].dt_txt.substring(11, 16);
             temp = (temp + pdate + " will be: " + json.list[i].main.temp + "°" + "\n")
